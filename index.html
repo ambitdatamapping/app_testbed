@@ -68,21 +68,24 @@ function handlePosition(pos) {
 	<div data-role="header" data-position="fixed" data-theme="b">
 <a href="#" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-myicon ui-btn-icon-notext ui-nodisc-icon">Cancel</a>
 <h1>Live Security</h1>
-<a href="#add" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-icon="plus" data-theme="a" data-transition="pop">Add</a></div>
-	<div data-role="content" id ="contentdiv">
+<a href="#add" data-role="button" data-icon="plus" data-theme="a">Add</a>
+</div>
+	<div data-role="content" id="contentdiv">
     <!-- you can use tables or divs for the overall layout -->
     <div id="map" style="width: 100%; height: 250px"></div>
     <div id="side_bar"></div>
-    <div data-role="popup" id="popupPhotoPortrait" class="photopopup" data-overlay-theme="a" data-corners="false" data-tolerance="30,15">
-    <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img src="../_assets/img/photo-portrait.jpg" alt="Photo portrait">
-</div>
+    </div>  <!-- Close contentdiv -->
 </div> <!-- Close Page 1   -->
            
            
 
          
            
-<div data-role="page" id="add" data-theme="a" class="ui-content">
+<div data-role="page" id="add" data-theme="a">
+<div data-role="header" data-position="fixed" data-theme="a" data-add-back-btn="true">
+<h1>Live Security</h1>
+</div>
+<div data-role="content" id="contentdiv2">
     <form action="http://livesecuk.com/app_new/addresp.asp" method="post" enctype="multipart/form-data" name="notifyForm" id="notifyForm" onsubmit="AJAXSubmit(this); return false;">
 <input type="file" NAME="fileData" id="fileData" accept="image/*"> <br />
 <!-- <input type="file" accept="audio/*"> <br />  -->
@@ -114,7 +117,8 @@ function handlePosition(pos) {
 <input type="hidden" name="NuserID" id="NuserID" />
 <INPUT TYPE="submit" NAME="SUB1" data-mini="true" VALUE="Share">
 </form>
-</div>
+</div>  <!-- Close contentdiv -->
+</div> <!-- Close Page 2   -->
 
 <script type="text/javascript">
 if ( navigator.geolocation )
