@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+  <head>
+<meta charset="utf-8">
+<title>Mobile Web App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="css/jquery.mobile-1.4.2.min.css" rel="stylesheet" type="text/css"/>
+<style type="text/css">
+h1 {
+	font-size:14px;
+	 }
+ul {list-style:none;}
+#main #contentdiv {
+	font-size: 11px;
+}
+#divlist  {
+	border-top-style:solid;
+	border-top-width:thin;
+	padding-top: 10px;
+	}
+a {
+	text-decoration:none; 
+}
+</style>
+<script src="js/jquery-1.11.0.min.js" type="text/javascript"></script>
+<script src="js/jquery.mobile-1.4.2.min.js" type="text/javascript"></script>
+<script src="http://maps.google.com/maps?file=api&amp;v=2.x&amp;key=ABQIAAAAL-Njd2s2z6iB1DDtYfmZSRRtPRTg4NxEhCyKfKotMF1EA0lPcBQqv8HFovh9bfxsVDGmbgEZSWuW2A" type="text/javascript"></script>
+<script type="text/javascript">
+if ( navigator.geolocation )
+{  
+  navigator.geolocation.getCurrentPosition(handlePosition);
+} 
+</script>
+<script type="text/javascript">
+function setText(val, e) {
+    document.getElementById(e).value = val;
+}
+function insertText(val, e) {
+    document.getElementById(e).value += val;
+}
+
+function handlePosition(pos) {
+   setText(pos.coords.latitude, "latitude");
+   setText(pos.coords.longitude, "longitude");
+   //document.getElementById("map").innerHTML="Your location is: " + pos.coords.latitude + ', ' + pos.coords.longitude;
+}
+</script>
+<script type="text/javascript">
+"use strict";
+
+function ajaxSuccess () {
+  alert('Success');
+}
+
+function AJAXSubmit (oFormElement) {
+  if (!oFormElement.action) { return; }
+  var oReq = new XMLHttpRequest();
+  oReq.onload = ajaxSuccess;
+  if (oFormElement.method.toLowerCase() === "post") {
+    oReq.open("post", oFormElement.action, true);
+    oReq.send(new FormData(oFormElement));
+  } else {
+    var oField, sFieldType, nFile, sSearch = "";
+    for (var nItem = 0; nItem < oFormElement.elements.length; nItem++) {
+      oField = oFormElement.elements[nItem];
+      if (!oField.hasAttribute("name")) { continue; }
+      sFieldType = oField.nodeName.toUpperCase() === "INPUT" ? oField.getAttribute("type").toUpperCase() : "TEXT";
+      if (sFieldType === "FILE") {
+        for (nFile = 0; nFile < oField.files.length; sSearch += "&" + escape(oField.name) + "=" + escape(oField.files[nFile++].name));
+      } else if ((sFieldType !== "RADIO" && sFieldType !== "CHECKBOX") || oField.checked) {
+        sSearch += "&" + escape(oField.name) + "=" + escape(oField.value);
+      }
+    }
+    oReq.open("get", oFormElement.action.replace(/(?:\?.*)?$/, sSearch.replace(/^&/, "?")), true);
+    oReq.send(null);
+  }
+}
+</script>
+
+
+  </head>
+<body> 
+<div id="main" data-role="page" data-theme="a">
+	<div data-role="header" data-position="fixed" data-theme="b">
+<a href="#" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-myicon ui-btn-icon-notext ui-nodisc-icon">Cancel</a>
+<h1>Live Security</h1>
+<a href="#popupLogin" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-icon="plus" data-theme="a" data-transition="pop">Add</a></div>
+	<div data-role="content" id ="contentdiv">
+    <!-- you can use tables or divs for the overall layout -->
+           
+<div data-role="popup" id="popupLogin" data-theme="a" class="ui-content">
+    <form action="addresp.asp" method="post" enctype="multipart/form-data" name="notifyForm" id="notifyForm" onsubmit="AJAXSubmit(this); return false;">
+<input type="file" NAME="fileData" id="fileData" accept="image/*"> <br />
+<!-- <input type="file" accept="audio/*"> <br />  -->
+<input name="Ndescription" id="Ndescription" placeholder="Description (optional)" value="" data-mini="true" /> <br />
+ <select id="Nincident" name="Nincident" placeholder="Incident" data-mini="true">
+  <option value="1" selected> Refused Entry </option>
+  <option value="2" selected> Escorted from Premises </option>
+  <option value="3" selected> Forcibly Removed </option>
+ </select> <br />
+<textarea name="Ndetails" rows="2" id="Ndetails" placeholder="Details"></textarea> <br />
+<!--
+<input name="Nlocation" id="Nlocation" placeholder="Venue" /> <br />
+-->
+<span>Police informed: <select name="Npolice" id="Npolice" data-role="slider" data-mini="true">        
+        <option value="No">No</option>
+        <option value="Yes">Yes</option>
+      </select>
+      </span>
+    <!--  
+<span><input name="Npolice" id="Npolice" type="checkbox" value="Yes" data-mini="true">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Police informed</span>
+-->
+<br />
+<input type="hidden" name="NownerID" id="NownerID" />
+<input type="hidden" name="Ntime" id="Ntime" />
+<input type="hidden" name="Ndate" id="Ndate" />
+<input type="hidden" name="latitude" id="latitude" />
+<input type="hidden" name="longitude" id="longitude" />
+<input type="hidden" name="Nlocation" id="Nlocation" />
+<input type="hidden" name="NuserID" id="NuserID" />
+<INPUT TYPE="submit" NAME="SUB1" data-mini="true" VALUE="Share">
+</form>
+</div>
+
+           <div id="map" style="width: 100%; height: 250px"></div>
+           
+           <div data-role="popup" id="popupPhotoPortrait" class="photopopup" data-overlay-theme="a" data-corners="false" data-tolerance="30,15">
+    <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img src="../_assets/img/photo-portrait.jpg" alt="Photo portrait">
+</div>
+
+           <div id="side_bar"></div>
+           
+           <script type="text/javascript">
+if ( navigator.geolocation )
+{
+	navigator.geolocation.getCurrentPosition(handlePosition, handleError);
+}
+function handleError(error)
+{
+	switch (error.code)
+	{
+		case error.PERMISSION_DENIED:
+			// User denied access to location. Perhaps redirect to alternate content?
+			alert('Permission was denied');
+			break;
+		case error.POSITION_UNAVAILABLE:
+			alert('Position is currently unavailable.');
+			break;
+		case error.PERMISSION_DENIED_TIMEOUT:
+			alert('User took to long to grant/deny permission.');
+			break;
+		case error.UNKNOWN_ERROR:
+			alert('An unknown error occurred.')
+			break;
+	}
+}
+options = {
+	enableHighAccuracy: true,
+	timeout:            30000,  // milliseconds (30 seconds)
+	maximumAge:         600000 // milliseconds (10 minutes)
+}
+navigator.geolocation.getCurrentPosition(handlePosition, handleError, options);
+</script>           
+           
+     <script type="text/javascript">
+    //<![CDATA[
+
+    if (GBrowserIsCompatible()) {
+      // this variable will collect the html which will eventualkly be placed in the side_bar
+      var side_bar_html = "";
+    
+      // arrays to hold copies of the markers used by the side_bar
+      // because the function closure trick doesnt work there
+      var gmarkers = [];
+
+      // A function to create the marker and set up the event window
+      function createMarker(point,name,html,imagelink) {
+        var marker = new GMarker(point);
+        GEvent.addListener(marker, "click", function() {
+          marker.openInfoWindowHtml(html);
+        });
+        // save the info we need to use later for the side_bar
+        gmarkers.push(marker);
+        // add a line to the side_bar html
+        side_bar_html += '<br><div id="divlist"><a href="javascript:myclick(' + (gmarkers.length-1) + ')">' + html + '</a>' + imagelink + '</div>';
+        return marker;
+      }
+
+
+      // This function picks up the click and opens the corresponding info window
+      function myclick(i) {
+        GEvent.trigger(gmarkers[i], "click");
+      }
+
+
+      // create the map
+      var map = new GMap2(document.getElementById("map"));
+      map.addControl(new GLargeMapControl());
+      map.addControl(new GMapTypeControl());
+	  // centre the map on users current location
+	  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function (position) {
+        userLatitude = position.coords.latitude;
+        userLongitude = position.coords.longitude;
+        center = new GLatLng(position.coords.latitude, position.coords.longitude);
+        map.setCenter(center, 15);
+        //addMapMarker();
+    });
+	  };
+      //map.setCenter(new GLatLng( 55.907787,-3.659741), 9);
+	  // center = new GLatLng(position.coords.latitude, position.coords.longitude);
+	  // map.setMyLocationEnabled(true);
+
+
+      // Read the data from example.xml
+      GDownloadUrl("../../admin/markersxml.asp", function(doc) {
+        var xmlDoc = GXml.parse(doc);
+        var markers = xmlDoc.documentElement.getElementsByTagName("marker");
+          
+        for (var i = 0; i < markers.length; i++) {
+          // obtain the attribues of each marker
+          var lat = parseFloat(markers[i].getAttribute("lat"));
+          var lng = parseFloat(markers[i].getAttribute("lng"));
+          var point = new GLatLng(lat,lng);
+	    //var html = GXml.value(markers[i].getElementsByTagName("infowindow")[0]);
+          var html = markers[i].getAttribute("html");
+          var label = markers[i].getAttribute("label");
+		  var imagelink = markers[i].getAttribute("imagelink");
+          // create the marker
+          var marker = createMarker(point,label,html,imagelink);
+          map.addOverlay(marker);
+        }
+        // put the assembled side_bar_html contents into the side_bar div
+        document.getElementById("side_bar").innerHTML = side_bar_html;
+      });
+    }
+
+    else {
+      alert("Sorry, the Google Maps API is not compatible with this browser");
+    }
+
+    // This Javascript is based on code provided by the
+    // Community Church Javascript Team
+    // http://www.bisphamchurch.org.uk/   
+    // http://econym.org.uk/gmap/
+
+    //]]>
+    </script>
+    </div>
+    </div>
+  </body>
+
+</html>
+
