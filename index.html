@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Geolocation</title>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+<link href="css/jquery.mobile-1.4.2.min.css" rel="stylesheet" type="text/css"/>
+<style type="text/css">
+h1 {
+	font-size:14px;
+	 }
+ul {list-style:none;}
+#main #contentdiv {
+	font-size: 11px;
+}
+#divlist  {
+	border-top-style:solid;
+	border-top-width:thin;
+	padding-top: 10px;
+	}
+a {
+	text-decoration:none; 
+}
+</style>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+<script src="js/download.js"></script>
+
+<script type="text/javascript">
+if ( navigator.geolocation )
+{  
+  navigator.geolocation.getCurrentPosition(handlePosition);
+} 
+</script>
+<script type="text/javascript">
+function setText(val, e) {
+    document.getElementById(e).value = val;
+}
+function insertText(val, e) {
+    document.getElementById(e).value += val;
+}
+
+function handlePosition(pos) {
+   setText(pos.coords.latitude, "latitude");
+   setText(pos.coords.longitude, "longitude");
+   //document.getElementById("map").innerHTML="Your location is: " + pos.coords.latitude + ', ' + pos.coords.longitude;
+}
+</script>
+</head>
+<body>
+  <div id="map" style="width: 100%; height: 250px"></div>    
+  <div id="side_bar" class="panel-body"></div>
+
+<script type="text/javascript">
+if ( navigator.geolocation )
+{
+	navigator.geolocation.getCurrentPosition(handlePosition, handleError);
+}
+function handleError(error)
+{
+	switch (error.code)
+	{
+		case error.PERMISSION_DENIED:
+			// User denied access to location. Perhaps redirect to alternate content?
+			alert('Permission was denied');
+			break;
+		case error.POSITION_UNAVAILABLE:
+			alert('Position is currently unavailable.');
+			break;
+		case error.PERMISSION_DENIED_TIMEOUT:
+			alert('User took to long to grant/deny permission.');
+			break;
+		case error.UNKNOWN_ERROR:
+			alert('An unknown error occurred.')
+			break;
+	}
+}
+options = {
+	enableHighAccuracy: true,
+	timeout:            30000,  // milliseconds (30 seconds)
+	maximumAge:         600000 // milliseconds (10 minutes)
+}
+navigator.geolocation.getCurrentPosition(handlePosition, handleError, options);
+</script>    
+
+<script type="text/javascript">
+    //<![CDATA[
+	 var side_bar_html = "";
+	 var gmarkers = [];
+    //var myLatlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+	
+	if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function (position) {
+        userLatitude = position.coords.latitude;
+        userLongitude = position.coords.longitude;
+        var myLatlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        //map.setCenter(pos);
+		map.setCenter(myLatlng);
+        //addMapMarker();
+    });
+	  };
+	 
+    var myOptions = {
+      zoom: 12,
+      //center: myLatlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+	 
+    var infoWindow = new google.maps.InfoWindow;
+	 var bounds = new google.maps.LatLngBounds();
+	
+		function createMarker(point,map,infoWindow,html,name) {
+			var marker = new google.maps.Marker({position:point,map:map,title:name}); 
+	      google.maps.event.addListener(marker, 'click', function() { 
+	        infoWindow.setContent(html); 
+	        infoWindow.open(map,marker); 
+	      });
+			bounds.extend(point);
+			gmarkers.push(marker);
+			side_bar_html += '<a href="javascript:myclick(' + (gmarkers.length-1) + ')">' + name + '<\/a><br>';
+			return marker;
+		}
+		
+      function myclick(i) {
+        google.maps.event.trigger(gmarkers[i], "click");
+      }
+		
+      var map = new google.maps.Map(document.getElementById("map"), myOptions);
+		
+		downloadUrl("http://www.livesecuk.com/admin/v3_markersxml.xml", function(data) { 
+        var xml = parseXml(data); 
+        var markers = xml.documentElement.getElementsByTagName("marker"); 
+        for (var i = 0; i < markers.length; i++) { 
+          var name = markers[i].getAttribute("name"); 
+          var stadium = markers[i].getAttribute("stadium"); 
+          var capacity = markers[i].getAttribute("capacity"); 
+          var point = new google.maps.LatLng( 
+              parseFloat(markers[i].getAttribute("lat")), 
+              parseFloat(markers[i].getAttribute("lng"))); 
+          var html = "" + name + "<br />" + stadium + "<br />" + capacity; 
+          
+          var marker = createMarker(point, map, infoWindow, html, name); 
+        }
+		  document.getElementById("side_bar").innerHTML = side_bar_html;
+		  map.fitBounds(bounds); 
+      });
+		//Ralph Ames
+		//www.easypagez.com
+		
+    //]]>
+    </script>
+     <script type="text/javascript" src="phonegap.js"></script>
+        <script src="geolocation.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript" src="js/PushipNotification.js"></script>
+        <script type="text/javascript">		
+		app.initialize();
+        </script>
+</body>
+</html>
