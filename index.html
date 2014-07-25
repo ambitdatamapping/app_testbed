@@ -24,7 +24,20 @@ a {
 </style>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
 <script src="js/download.js"></script>
+<script type="text/javascript" charset="utf-8">
+//*********************************************************
+// Wait for Cordova to Load
+//*********************************************************
 
+document.addEventListener("deviceready", onDeviceReady, false);
+function initInput()
+	{
+	var variable = device.uuid;
+	//var variable2 = device.uuid;
+	document.forms["notifyForm"].Nlocation.value = variable;	
+	//document.forms["safety_clockOut"].safety_deviceid2.value = variable2;
+	}
+</script>
 <script type="text/javascript">
 if ( navigator.geolocation )
 {  
