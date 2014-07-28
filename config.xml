@@ -4,7 +4,7 @@
         id        = "com.livesecuk.mapview"
         version   = "1.0.0">
 
-    <name>Live Security 5</name>
+    <name>Live Security 6</name>
 
     <description>
         Venue and Event security application.
@@ -93,13 +93,14 @@
 
         <access />            - a blank access tag denies access to all external resources.
 		-->
-        <access origin="*" /> <!-- a wildcard access tag allows access to all external resource.  -->
-       <!-- Otherwise, you can specify specific domains:  -->
-    
-   <access origin="http://127.0.0.1*" /> <!-- allow local pages -->
+		 <access origin="http://127.0.0.1*" /> <!-- allow local pages -->
     <access origin="http://puship.cloudapp.net" /> <!-- allow call to puship cloud domain -->
 	<access origin="http://livesecuk.com" /> <!-- allow call to puship php server on livesecuk domain -->
 
+        <access origin="*" /> <!-- a wildcard access tag allows access to all external resource.  -->
+       <!-- Otherwise, you can specify specific domains:  -->
+    
+  
     <!--
         <access origin="http://phonegap.com" />                    - allow any secure requests to http://phonegap.com/
         <access origin="http://phonegap.com" subdomains="true" />  - same as above, but including subdomains, such as http://build.phonegap.com/
