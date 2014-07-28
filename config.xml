@@ -18,12 +18,11 @@
         If you do not want any permissions to be added to your app, add the
         following tag to your config.xml; you will still have the INTERNET
         permission on your app, which PhoneGap requires.
-    
+    -->
     <preference name="permissions"                value="none"/>
-	-->
 
     <!-- Customize your app and platform with the preference element. -->
-    <preference name="phonegap-version"           value="3.3.0" />          <!-- all: current version of PhoneGap -->
+    <preference name="phonegap-version"           value="3.1.0" />          <!-- all: current version of PhoneGap -->
     <preference name="orientation"                value="default" />        <!-- all: default means both landscape and portrait are enabled -->
     <preference name="target-device"              value="universal" />      <!-- all: possible values handset, tablet, or universal -->
     <preference name="fullscreen"                 value="true" />           <!-- all: hides the status bar at the top of the screen -->
@@ -92,14 +91,13 @@
         Define access to external domains.
 
         <access />            - a blank access tag denies access to all external resources.
-	-->
-        <access origin="*" /> <!-- a wildcard access tag allows access to all external resource.  -->
+        <access origin="*" /> - a wildcard access tag allows access to all external resource.
 
-     <!--   Otherwise, you can specify specific domains:  -->
-    
-  <!--  <access origin="http://127.0.0.1*" />  allow local pages -->
-  <!--  <access origin="http://puship.cloudapp.net" />  allow call to puship cloud domain -->
-  <!--  <access origin="http://livesecuk.com" />  allow call to puship php server on livesecuk domain -->
+        Otherwise, you can specify specific domains:
+    -->
+    <access origin="http://127.0.0.1*" /> <!-- allow local pages -->
+    <access origin="http://puship.cloudapp.net" /> <!-- allow call to puship cloud domain -->
+	<access origin="http://livesecuk.com" /> <!-- allow call to puship php server on livesecuk domain -->
 
     <!--
         <access origin="http://phonegap.com" />                    - allow any secure requests to http://phonegap.com/
