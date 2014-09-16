@@ -102,10 +102,13 @@
 		 <access origin="http://puship.cloudapp.net" /> <!-- allow call to puship cloud domain -->
 		 <access origin="http://livesecuk.com/*" /> <!-- allow call to puship php server on livesecuk domain -->
 		 <access origin="*.google.com" />
+		 <access origin="https://*.google.com" />
+		 <access origin="https://google.com" />
+		 <access origin="http://maps.google.com" />
     <access origin="*.googleapis.com" />
     <access origin="*.gstatic.com" />
     <access origin="*.googleusercontent.com" />
-    <access origin="google.com" subdomains="true"/>
+    <access origin="http://google.com" subdomains="true"/>
     <access origin="googleapis.com" subdomains="true"/>
     <access origin="gstatic.com" subdomains="true"/>
     <access origin="googleusercontent.com" subdomains="true"/>
