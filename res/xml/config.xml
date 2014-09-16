@@ -94,7 +94,8 @@
 
         <access />            - a blank access tag denies access to all external resources.
 		--> 
-		  <access origin="*" />  a wildcard access tag allows access to all external resource.  -->
+		  
+		  <access origin="*" subdomains="true"/>   <!-- a wildcard access tag allows access to all external resource.  -->
 		
 		<!-- Otherwise, you can specify specific domains:  -->
 		 <access origin="http://127.0.0.1*" /> <!-- allow local pages -->
