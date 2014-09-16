@@ -236,7 +236,7 @@ navigator.geolocation.getCurrentPosition(handlePosition, handleError, options);
 
 
       // Read the data from example.xml
-      GDownloadUrl("http://livesecuk.com/admin/markersxml.asp", function(doc) {
+      GDownloadUrl("http://livesecuk.com/admin/mapmarkers.asp", function(doc) {
         var xmlDoc = GXml.parse(doc);
         var markers = xmlDoc.documentElement.getElementsByTagName("marker");
           
