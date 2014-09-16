@@ -193,7 +193,10 @@ navigator.geolocation.getCurrentPosition(handlePosition, handleError, options);
 
       // A function to create the marker and set up the event window
       function createMarker(point,name,html,imagelink) {
-        var marker = new GMarker(point);
+        //var marker = new GMarker(point);
+		var marker = new GMarker(point, icons);
+		var icon = new GIcon(baseIcon);
+      icon.image = "mapIcons/mm_20_3d_red.png";
         GEvent.addListener(marker, "click", function() {
           marker.openInfoWindowHtml(html);
         });
@@ -241,6 +244,7 @@ navigator.geolocation.getCurrentPosition(handlePosition, handleError, options);
           var lng = parseFloat(markers[i].getAttribute("lng"));
           var point = new GLatLng(lat,lng);
 	    //var html = GXml.value(markers[i].getElementsByTagName("infowindow")[0]);
+		  
           var html = markers[i].getAttribute("html");
           var label = markers[i].getAttribute("label");
 		  var imagelink = markers[i].getAttribute("imagelink");
