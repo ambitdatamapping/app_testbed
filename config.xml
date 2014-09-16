@@ -5,7 +5,7 @@
 		id        = "com.livesecuk.mapview"
         version   = "1.0.0">
 
-    <name>Live Security 7</name>
+    <name>Live Security Ajax</name>
 
     <description>
         Venue and Event security application.
@@ -57,6 +57,7 @@
     <gap:plugin name="org.apache.cordova.core.network-information" />
     <gap:plugin name="org.apache.cordova.core.splashscreen" />
     <gap:plugin name="org.apache.cordova.core.vibration" />
+	<!-- <gap:plugin name="org.apache.cordova.core.inappbrowser" />  -->
 
     <!-- Third party plugins -->
     <gap:plugin name="com.phonegap.plugins.pushplugin" />
