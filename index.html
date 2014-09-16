@@ -93,7 +93,7 @@ function AJAXSubmit (oFormElement) {
 
 
   </head>
-<body> 
+<body onLoad="initInput()">
 <div id="main" data-role="page" data-theme="a">
 	<div data-role="header" data-position="fixed" data-theme="b">
 <a href="#" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-myicon ui-btn-icon-notext ui-nodisc-icon">Cancel</a>
@@ -141,7 +141,9 @@ function AJAXSubmit (oFormElement) {
 </form>
 </div>
 
+           <div id="top" style="width: 100%; height: 50px">Hello</div>
            <div id="map" style="width: 100%; height: 250px"></div>
+
            
            <div data-role="popup" id="popupPhotoPortrait" class="photopopup" data-overlay-theme="a" data-corners="false" data-tolerance="30,15">
     <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img src="../_assets/img/photo-portrait.jpg" alt="Photo portrait">
