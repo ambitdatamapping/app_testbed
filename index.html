@@ -91,8 +91,8 @@ function AJAXSubmit (oFormElement) {
 }
 </script>
 </head>
-<!-- <body> -->
- <body onLoad="initInput()">  
+ <body> 
+ <!-- <body onLoad="initInput()"> --> 
 <div id="main" data-role="page" data-theme="a">
 	<div data-role="header" data-position="fixed" data-theme="b">
 <a href="#" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-myicon ui-btn-icon-notext ui-nodisc-icon">Cancel</a>
@@ -139,7 +139,7 @@ function AJAXSubmit (oFormElement) {
 </div>
 <div id="map" style="width: 100%; height: 250px"></div>
 <div data-role="popup" id="popupPhotoPortrait" class="photopopup" data-overlay-theme="a" data-corners="false" data-tolerance="30,15">
-    <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img src="../_assets/img/photo-portrait.jpg" alt="Photo portrait">
+    <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img src="images/view.gif" alt="Photo portrait">
 </div>
 <div id="side_bar"></div>
 </div>
@@ -239,6 +239,8 @@ navigator.geolocation.getCurrentPosition(handlePosition, handleError, options);
           var lat = parseFloat(markers[i].getAttribute("lat"));
           var lng = parseFloat(markers[i].getAttribute("lng"));
           var point = new GLatLng(lat,lng);
+		  //var icons = "mapIcons/mm_20_3d_blue.png";
+
 		  
 	    //var html = GXml.value(markers[i].getElementsByTagName("infowindow")[0]);
           var html = markers[i].getAttribute("html");
@@ -265,10 +267,10 @@ navigator.geolocation.getCurrentPosition(handlePosition, handleError, options);
     //]]>
     </script>
         <script type="text/javascript" src="phonegap.js"></script>
-        <!-- <script type="text/javascript" src="geolocation.js"></script>
+         <script type="text/javascript" src="geolocation.js"></script>
         <script type="text/javascript" src="device.js"></script>  
         <script type="text/javascript" src="js/index.js"></script>
-        <script type="text/javascript" src="js/PushipNotification.js"></script>  -->
+        <script type="text/javascript" src="js/PushipNotification.js"></script>  
         <!-- <script type="text/javascript">		
 		app.initialize();
         </script>  -->
