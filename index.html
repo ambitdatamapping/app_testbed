@@ -10,29 +10,63 @@
 <script type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
 
       <script type="text/javascript">
+          var map, dataLayer, infobox;
 
-         var map = null;         
+          function GetMap() {
+              // Initialize the map
+              map = new Microsoft.Maps.Map(document.getElementById("myMap"), { credentials: "AoHg7IAKimpT3dO9Y7j82ao5biaXFCVCREbZ7_91s2uY2Wtr1FZ4mXW3Q5QsPDNJ" });
 
-         function GetMap()
-         {
-            // Initialize the map
-            map = new Microsoft.Maps.Map(document.getElementById("myMap"),
-                         {credentials:"AoHg7IAKimpT3dO9Y7j82ao5biaXFCVCREbZ7_91s2uY2Wtr1FZ4mXW3Q5QsPDNJ"}); 
+              dataLayer = new Microsoft.Maps.EntityCollection();
+              map.entities.push(dataLayer);
 
-            // Define the pushpin location
-            var loc = new Microsoft.Maps.Location(53.6496522, -1.8029196);
-            
-            // Add a pin to the map
-            var pin = new Microsoft.Maps.Pushpin(loc); 
-            map.entities.push(pin);
+              var infoboxLayer = new Microsoft.Maps.EntityCollection();
+              map.entities.push(infoboxLayer);
 
-            // Center the map on the location
-            map.setView({center: loc, zoom: 10});
-              
+              infobox = new Microsoft.Maps.Infobox(new Microsoft.Maps.Location(0, 0), { visible: false, offset: new Microsoft.Maps.Point(0, 20) });
+              infoboxLayer.push(infobox);
 
-         }
+              //Register and load the GeoRSS Module
+              Microsoft.Maps.registerModule("GeoRSSModule", "scripts/GeoRSSModule.js");
+              Microsoft.Maps.loadModule("GeoRSSModule");
+          }
 
+          function LoadGeoRSS(url) {
+              dataLayer.clear();
 
+              //Define default shape options
+              var polylineOptions = {
+                  strokeColor: new Microsoft.Maps.Color(156, 0, 0, 255)
+              };
+
+              var polygonOptions = {
+                  fillColor: new Microsoft.Maps.Color(156, 0, 0, 255),
+                  strokeColor: new Microsoft.Maps.Color(156, 0, 255, 0)
+              };
+
+              new GeoRSSModule().ImportGeoRSS(url, GeoRSSImportedCallback, { polylineOptions: polylineOptions, polygonOptions: polygonOptions });
+          }
+
+          function GeoRSSImportedCallback(items, bounds) {
+              //Advance functionalities can be added here such as adding event handlers.
+              for (var i = 0; i < items.getLength() ; i++) {
+                  Microsoft.Maps.Events.addHandler(items.get(i), 'click', displayInfobox);
+              }
+
+              dataLayer.push(items);
+              map.setView({ bounds: bounds });
+          }
+
+          function displayInfobox(e) {
+              if (e.target.Metadata) {
+                  if (e.targetType == 'pushpin') {
+                      infobox.setLocation(e.target.getLocation());
+                  } else {
+                      infobox.setLocation(map.tryPixelToLocation(new Microsoft.Maps.Point(e.getX(), e.getY())));
+                  }
+
+                  infobox.setOptions({ visible: true, title: e.target.Metadata.title, description: e.target.Metadata.description });
+              }
+          } 
       </script>
       <script type="text/javascript" charset="utf-8">
 //*********************************************************
@@ -146,10 +180,10 @@ function AJAXSubmit (oFormElement) {
 <INPUT TYPE="submit" NAME="SUB1" data-mini="true" VALUE="Share">
 </form>
 </div>
-<div id="bingPage" style="width: 100%; height: 50px"><a href="bing.html">bing map</a></div>
-   <div id="text">Hello</div>
+   <div id="text">        <input type="button" value="Local file (Notifications)" onclick="LoadGeoRSS('http://www.livesecuk.com/admin/markersRSS.asp')"/>
+</div>
 
-      <div id='myMap' style="position:relative; width:100%; height:250px;"></div>
+      <div id='myMap' style="position:relative; width:100%; height:300px;"></div>
 <div data-role="popup" id="popupPhotoPortrait" class="photopopup" data-overlay-theme="a" data-corners="false" data-tolerance="30,15">
     <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img src="images/view.gif" alt="Photo portrait">
 </div>
