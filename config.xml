@@ -102,6 +102,11 @@
 		 <access origin="http://w3.org/*" /> 
 		 <access origin="http://puship.cloudapp.net" /> <!-- allow call to puship cloud domain -->
 		 <access origin="http://www.livesecuk.com/*" /> <!-- allow call to puship php server on livesecuk domain -->
+		 <access origin="*.virtualearth.net" subdomains="true"/>
+		 <access origin="https://*.microsoft.com" />
+		 <access origin="https://microsoft.com" subdomains="true"/>
+		 <access origin="http://*.virtualearth.net" subdomains="true"/>
+		 
 		 <access origin="*.google.com" />
 		 <access origin="https://*.google.com" />
 		 <access origin="https://google.com" />
