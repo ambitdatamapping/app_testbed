@@ -2,7 +2,7 @@
 <html>
   <head>
 <meta charset="utf-8">
-<title>Image</title>
+<title>Mobile Web App</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="css/jquery.mobile-1.4.2.min.css" rel="stylesheet" type="text/css"/>
 <style type="text/css">
@@ -90,19 +90,15 @@ function AJAXSubmit (oFormElement) {
   }
 }
 </script>
-
-
-  <!-- Copyright 2000, 2001, 2002, 2003 Macromedia, Inc. All rights reserved. -->
-  </head>
-<body onLoad="initInput()">
+</head>
+<!-- <body> -->
+ <body onLoad="initInput()">  
 <div id="main" data-role="page" data-theme="a">
 	<div data-role="header" data-position="fixed" data-theme="b">
 <a href="#" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-myicon ui-btn-icon-notext ui-nodisc-icon">Cancel</a>
 <h1>Live Security</h1>
 <a href="#popupLogin" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-icon="plus" data-theme="a" data-transition="pop">Add</a></div>
 	<div data-role="content" id ="contentdiv">
-    <!-- you can use tables or divs for the overall layout -->
-           
 <div data-role="popup" id="popupLogin" data-theme="a" class="ui-content">
     <form action="http://livesecuk.com/app_new/addresp.asp" method="post" enctype="multipart/form-data" name="notifyForm" id="notifyForm" onsubmit="AJAXSubmit(this); return false;">
 <input type="file" NAME="fileData" id="fileData" accept="image/*"> <br />
@@ -193,9 +189,9 @@ navigator.geolocation.getCurrentPosition(handlePosition, handleError, options);
 
       // A function to create the marker and set up the event window
       function createMarker(point,name,html,imagelink) {
-        //var marker = new GMarker(point);
-		var marker = new GMarker(point, icons);
-		var icons = 'mapIcons/mm_20_3d_red.png';
+        var marker = new GMarker(point);
+		//var marker = new GMarker(point, icons);
+		//var icons = 'mapIcons/mm_20_3d_blue.png';
         GEvent.addListener(marker, "click", function() {
           marker.openInfoWindowHtml(html);
         });
@@ -233,7 +229,8 @@ navigator.geolocation.getCurrentPosition(handlePosition, handleError, options);
 
 
       // Read the data from example.xml
-      GDownloadUrl("http://livesecuk.com/admin/markersxml.asp", function(doc) {
+      GDownloadUrl("http://www.livesecuk.com/admin/markersxml.asp", function(doc) {
+	  //GDownloadUrl("../../admin/markersxml.asp", function(doc) {
         var xmlDoc = GXml.parse(doc);
         var markers = xmlDoc.documentElement.getElementsByTagName("marker");
           
@@ -267,10 +264,9 @@ navigator.geolocation.getCurrentPosition(handlePosition, handleError, options);
 
     //]]>
     </script>
-    <script type="text/javascript" src="phonegap.js"></script>
-        <script src="geolocation.js"></script>
-                <script src="device.js"></script>
-
+        <script type="text/javascript" src="phonegap.js"></script>
+        <script type="text/javascript" src="geolocation.js"></script>
+        <script type="text/javascript" src="device.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script type="text/javascript" src="js/PushipNotification.js"></script>
         <script type="text/javascript">		
