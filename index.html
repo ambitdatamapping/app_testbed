@@ -136,9 +136,16 @@ function AJAXSubmit (oFormElement) {
   }
 }
 </script>
+<script>
+function start() {
+  initInput();
+  GetMap();
+}
+//window.onload = start;
+</script>
    </head>
-   <body onload="initInput();GetMap()">  
-
+   <body onload= start>
+   <!-- <body onload="initInput();GetMap()">  -->
    <!-- <body onload="GetMap();initInput();">  -->
    <!-- <body onLoad="initInput()">   Necessary for Device UUID -->
    <!-- <body onload="func1(); func2();"> -->
