@@ -29,6 +29,16 @@
               Microsoft.Maps.registerModule("GeoRSSModule", "scripts/GeoRSSModule.js");
               Microsoft.Maps.loadModule("GeoRSSModule");
           }
+		  
+		  function getCurrentLocation()
+      {
+        var geoLocationProvider = new Microsoft.Maps.GeoLocationProvider(map);  
+        geoLocationProvider.getCurrentPosition({ successCallback: successCallback }); 
+      }
+      function successCallback(object)  
+      {
+        alert('Success callback invoked, current map center '  + object.center);
+      }
 
           function LoadGeoRSS(url) {
               dataLayer.clear();
@@ -140,6 +150,7 @@ function AJAXSubmit (oFormElement) {
 function start() {
   initInput();
   GetMap();
+  getCurrentLocation();
 }
 window.onload = start;
 </script>
@@ -158,7 +169,7 @@ window.onload = start;
 	<div data-role="content" id ="contentdiv">
 <div data-role="popup" id="popupLogin" data-theme="a" class="ui-content">
     <form action="http://livesecuk.com/app_new/addresp.asp" method="post" enctype="multipart/form-data" name="notifyForm" id="notifyForm" onsubmit="AJAXSubmit(this); return false;">
-<input type="file" NAME="fileData" id="fileData" accept="image/*"> <br />
+<input type="file" NAME="fileData" id="fileData" accept="audio/*,video/*,image/*" /> <br />
 <!-- <input type="file" accept="audio/*"> <br />  -->
 <input name="Ndescription" id="Ndescription" placeholder="Description (optional)" value="" data-mini="true" /> <br />
  <select id="Nincident" name="Nincident" placeholder="Incident" data-mini="true">
@@ -197,7 +208,7 @@ window.onload = start;
    <div id="text">        <input type="button" value="Local file (Notifications)" onclick="LoadGeoRSS('http://www.livesecuk.com/admin/markersRSS.asp')"/>
 </div>
 
-      <div id='myMap' style="position:relative; width:100%; height:300px;"></div>
+      <div id='myMap' style="position:relative; width:100%; height:500px;"></div>
 <div data-role="popup" id="popupPhotoPortrait" class="photopopup" data-overlay-theme="a" data-corners="false" data-tolerance="30,15">
     <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img src="images/view.gif" alt="Photo portrait">
 </div>
