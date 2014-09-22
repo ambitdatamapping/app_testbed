@@ -1,72 +1,253 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <base target="content-frame">
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
-    <script type="text/javascript">
-        var map = null;
-        var MapSize = {
-            normalSize: {
-                height: 400,
-                width: 400
-            },
-            fullScreen: {
-                height: screen.height,
-                width: screen.width
-            }
-        }
+  <head>
+<meta charset="utf-8">
+<title>Mobile Web App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="css/jquery.mobile-1.4.2.min.css" rel="stylesheet" type="text/css"/>
+<script src="js/jquery-1.11.0.min.js" type="text/javascript"></script>
+<script src="js/jquery.mobile-1.4.2.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=7.0"></script>
+ 
+      <script type="text/javascript">
+          var map, dataLayer, infobox;
 
-        function getMap() {
-            var mapOptions = {
-                credentials: "AoHg7IAKimpT3dO9Y7j82ao5biaXFCVCREbZ7_91s2uY2Wtr1FZ4mXW3Q5QsPDNJ",
-                mapTypeId: Microsoft.Maps.MapTypeId.birdseye,
-                center: new Microsoft.Maps.Location(53.6496522, -1.8029196),
-                zoom: 18,
-                //labelOverlay: Microsoft.Maps.LabelOverlay.hidden,
-                height: MapSize.normalSize.height,
-                width: MapSize.normalSize.width
-            }
-            map = new Microsoft.Maps.Map(document.getElementById("myMap"), mapOptions);
-        }
+          function GetMap() {
+              // Initialize the map
+              map = new Microsoft.Maps.Map(document.getElementById("myMap"), { credentials: "AoHg7IAKimpT3dO9Y7j82ao5biaXFCVCREbZ7_91s2uY2Wtr1FZ4mXW3Q5QsPDNJ" });
 
+              dataLayer = new Microsoft.Maps.EntityCollection();
+              map.entities.push(dataLayer);
 
-        $(function () {
-            getMap();
+              var infoboxLayer = new Microsoft.Maps.EntityCollection();
+              map.entities.push(infoboxLayer);
 
-            $("#fullscreen").on("click",function() {
-                var el = document.getElementById("myMap");
-                if (el.requestFullscreen) {
-                    el.requestFullscreen();
-                    $(document).on("fullscreenchange", fullScreenExit);
-                }
-                else if (el.mozRequestFullScreen) {
-                    el.mozRequestFullScreen();
-                    $(document).on("mozfullscreenchange", fullScreenExit);
-                }
-                else if (el.webkitRequestFullScreen) {
-                    el.webkitRequestFullScreen();
-                    $(document).on("webkitfullscreenchange", fullScreenExit);
-                }
+              infobox = new Microsoft.Maps.Infobox(new Microsoft.Maps.Location(0, 0), { visible: false, offset: new Microsoft.Maps.Point(0, 20) });
+              infoboxLayer.push(infobox);
 
-                map.setOptions({ height: MapSize.fullScreen.height, width: MapSize.fullScreen.width });
-            });
-        });
+              //Register and load the GeoRSS Module
+              Microsoft.Maps.registerModule("GeoRSSModule", "scripts/GeoRSSModule.js");
+              Microsoft.Maps.loadModule("GeoRSSModule");
+          }
+		  
+		  function getCurrentLocation()
+      {
+        var geoLocationProvider = new Microsoft.Maps.GeoLocationProvider(map);  
+        geoLocationProvider.getCurrentPosition({ successCallback: successCallback }); 
+      }
+      function successCallback(object)  
+      {
+        alert('Success callback invoked, current map center '  + object.center);
+      }
 
-        function fullScreenExit() {
-            if (!isFullScreen())
-                map.setOptions({ height: MapSize.normalSize.height, width: MapSize.normalSize.width });
-        }
+          function LoadGeoRSS(url) {
+              dataLayer.clear();
 
-        function isFullScreen() {
-            return document.fullscreen || document.mozFullScreen || document.webkitIsFullScreen;
-        }
-    </script>
-</head>
-<body>
-    <div id='myMap'></div><br><br>
-    <button id="fullscreen">full screen</button>
-    <script type="text/javascript" src="phonegap.js"></script>
+              //Define default shape options
+              var polylineOptions = {
+                  strokeColor: new Microsoft.Maps.Color(156, 0, 0, 255)
+              };
+
+              var polygonOptions = {
+                  fillColor: new Microsoft.Maps.Color(156, 0, 0, 255),
+                  strokeColor: new Microsoft.Maps.Color(156, 0, 255, 0)
+              };
+
+              new GeoRSSModule().ImportGeoRSS(url, GeoRSSImportedCallback, { polylineOptions: polylineOptions, polygonOptions: polygonOptions });
+          }
+
+          function GeoRSSImportedCallback(items, bounds) {
+              //Advance functionalities can be added here such as adding event handlers.
+              for (var i = 0; i < items.getLength() ; i++) {
+                  Microsoft.Maps.Events.addHandler(items.get(i), 'click', displayInfobox);
+              }
+
+              dataLayer.push(items);
+              map.setView({ bounds: bounds });
+          }
+
+          function displayInfobox(e) {
+              if (e.target.Metadata) {
+                  if (e.targetType == 'pushpin') {
+                      infobox.setLocation(e.target.getLocation());
+                  } else {
+                      infobox.setLocation(map.tryPixelToLocation(new Microsoft.Maps.Point(e.getX(), e.getY())));
+                  }
+
+                  infobox.setOptions({ visible: true, title: e.target.Metadata.title, description: e.target.Metadata.description });
+              }
+          } 
+      </script>
+  
+      
+      
+      <script type="text/javascript" charset="utf-8">
+//*********************************************************
+// Wait for Cordova to Load
+//*********************************************************
+
+document.addEventListener("deviceready", onDeviceReady, false);
+function initInput()
+	{
+	var varUUID = device.uuid;
+	//var variable2 = device.uuid;
+	document.forms["notifyForm"].uuid.value = varUUID;	
+	//document.forms["safety_clockOut"].safety_deviceid2.value = variable2;
+	}
+</script>
+<script type="text/javascript">
+if ( navigator.geolocation )
+{  
+  navigator.geolocation.getCurrentPosition(handlePosition);
+} 
+</script>
+<script type="text/javascript">
+function setText(val, e) {
+    document.getElementById(e).value = val;
+}
+function insertText(val, e) {
+    document.getElementById(e).value += val;
+}
+
+function handlePosition(pos) {
+   setText(pos.coords.latitude, "latitude");
+   setText(pos.coords.longitude, "longitude");
+   //document.getElementById("map").innerHTML="Your location is: " + pos.coords.latitude + ', ' + pos.coords.longitude;
+}
+</script>
+<script type="text/javascript">
+"use strict";
+
+function ajaxSuccess () {
+  alert('Success');
+}
+
+function AJAXSubmit (oFormElement) {
+  if (!oFormElement.action) { return; }
+  var oReq = new XMLHttpRequest();
+  oReq.onload = ajaxSuccess;
+  if (oFormElement.method.toLowerCase() === "post") {
+    oReq.open("post", oFormElement.action, true);
+    oReq.send(new FormData(oFormElement));
+  } else {
+    var oField, sFieldType, nFile, sSearch = "";
+    for (var nItem = 0; nItem < oFormElement.elements.length; nItem++) {
+      oField = oFormElement.elements[nItem];
+      if (!oField.hasAttribute("name")) { continue; }
+      sFieldType = oField.nodeName.toUpperCase() === "INPUT" ? oField.getAttribute("type").toUpperCase() : "TEXT";
+      if (sFieldType === "FILE") {
+        for (nFile = 0; nFile < oField.files.length; sSearch += "&" + escape(oField.name) + "=" + escape(oField.files[nFile++].name));
+      } else if ((sFieldType !== "RADIO" && sFieldType !== "CHECKBOX") || oField.checked) {
+        sSearch += "&" + escape(oField.name) + "=" + escape(oField.value);
+      }
+    }
+    oReq.open("get", oFormElement.action.replace(/(?:\?.*)?$/, sSearch.replace(/^&/, "?")), true);
+    oReq.send(null);
+  }
+}
+</script>
+<script>
+function start() {
+  initInput();
+  GetMap();
+  getCurrentLocation();
+}
+window.onload = start;
+</script>
+   </head>
+   <body>
+   <!-- <body onload="initInput();GetMap()">  -->
+   <!-- <body onload="GetMap();initInput();">  -->
+   <!-- <body onLoad="initInput()">   Necessary for Device UUID -->
+   <!-- <body onload="func1(); func2();"> -->
+      
+      <div id="main" data-role="page" data-theme="a">
+	<div data-role="header" data-position="fixed" data-theme="b">
+<a href="#" class="ui-btn-left ui-btn ui-btn-inline ui-mini ui-corner-all ui-btn-icon-left ui-icon-myicon ui-btn-icon-notext ui-nodisc-icon">Cancel</a>
+<h1>Live Security</h1>
+<a href="#popupLogin" data-rel="popup" data-position-to="window" data-role="button" data-inline="true" data-icon="plus" data-theme="a" data-transition="pop">Add</a></div>
+	<div data-role="content" id ="contentdiv">
+<div data-role="popup" id="popupLogin" data-theme="a" class="ui-content">
+    <form action="http://livesecuk.com/app_new/addresp.asp" method="post" enctype="multipart/form-data" name="notifyForm" id="notifyForm" onsubmit="AJAXSubmit(this); return false;">
+<input type="file" NAME="fileData" id="fileData" accept="audio/*,video/*,image/*" /> <br />
+<!-- <input type="file" accept="audio/*"> <br />  -->
+<input name="Ndescription" id="Ndescription" placeholder="Description (optional)" value="" data-mini="true" /> <br />
+ <select id="Nincident" name="Nincident" placeholder="Incident" data-mini="true">
+  <option value="1" selected> Refused Entry </option>
+  <option value="2" selected> Escorted from Premises </option>
+  <option value="3" selected> Forcibly Removed </option>
+ </select> <br />
+ <select id="venueID" name="venueID" placeholder="Venue" data-mini="true">
+  <option value="1" selected> Bar One </option>
+  <option value="2" selected> Bar Kohl </option>
+  <option value="3" selected> The Hanging Bat </option>
+ </select> <br />
+<textarea name="Ndetails" rows="2" id="Ndetails" placeholder="Details"></textarea> <br />
+<!--
+<input name="Nlocation" id="Nlocation" placeholder="Venue" /> <br />
+-->
+<span>Police informed: <select name="Npolice" id="Npolice" data-role="slider" data-mini="true">        
+        <option value="No">No</option>
+        <option value="Yes">Yes</option>
+      </select>
+      </span>
+    <!--  
+<span><input name="Npolice" id="Npolice" type="checkbox" value="Yes" data-mini="true">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Police informed</span>
+-->
+<br />
+<input type="hidden" name="NownerID" id="NownerID" />
+<input type="hidden" name="Ntime" id="Ntime" />
+<input type="hidden" name="Ndate" id="Ndate" />
+<input type="hidden" name="latitude" id="latitude" />
+<input type="hidden" name="longitude" id="longitude" />
+<input type="hidden" name="Nlocation" id="Nlocation" />
+<input type="text" name="uuid" id="uuid" />
+<INPUT TYPE="submit" NAME="SUB1" data-mini="true" VALUE="Share">
+</form>
+</div>
+   <div id="text">        <input type="button" value="Local file (Notifications)" onclick="LoadGeoRSS('http://www.livesecuk.com/admin/markersRSS.asp')"/>
+</div>
+
+      <div id='myMap' style="position:relative; width:100%; height:500px;"></div>
+<div data-role="popup" id="popupPhotoPortrait" class="photopopup" data-overlay-theme="a" data-corners="false" data-tolerance="30,15">
+    <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img src="images/view.gif" alt="Photo portrait">
+</div>
+<div id="side_bar"></div>
+</div>
+</div>
+<script type="text/javascript">
+if ( navigator.geolocation )
+{
+	navigator.geolocation.getCurrentPosition(handlePosition, handleError);
+}
+function handleError(error)
+{
+	switch (error.code)
+	{
+		case error.PERMISSION_DENIED:
+			// User denied access to location. Perhaps redirect to alternate content?
+			alert('Permission was denied');
+			break;
+		case error.POSITION_UNAVAILABLE:
+			alert('Position is currently unavailable.');
+			break;
+		case error.PERMISSION_DENIED_TIMEOUT:
+			alert('User took to long to grant/deny permission.');
+			break;
+		case error.UNKNOWN_ERROR:
+			alert('An unknown error occurred.')
+			break;
+	}
+}
+options = {
+	enableHighAccuracy: true,
+	timeout:            30000,  // milliseconds (30 seconds)
+	maximumAge:         600000 // milliseconds (10 minutes)
+}
+navigator.geolocation.getCurrentPosition(handlePosition, handleError, options);
+</script>
+
+<script type="text/javascript" src="phonegap.js"></script>
          <script type="text/javascript" src="geolocation.js"></script>
         <script type="text/javascript" src="device.js"></script>  
         <script type="text/javascript" src="js/index.js"></script>
@@ -74,5 +255,7 @@
          <script type="text/javascript">		
 		app.initialize();
         </script> 
-</body>
+          
+             
+   </body>
 </html>
